@@ -1,4 +1,4 @@
-# app.py - Music Recommender (FULL DATASET, NO ALBUM COVERS)
+# app.py - Music Recommender System
 
 import streamlit as st
 import pandas as pd
@@ -12,7 +12,7 @@ st.set_page_config(page_title="Music Recommender", layout="wide")
 # ----------------- MUSIC RECOMMENDER -----------------
 class MusicRecommender:
     def __init__(self):
-        # ✅ Load FULL dataset (precomputed)
+        # Load FULL dataset (precomputed)
         self.df = pickle.load(open("df.pkl", "rb"))
         self.similarity = pickle.load(open("similarity.pkl", "rb"))
 
@@ -26,7 +26,7 @@ class MusicRecommender:
         idx = self.df[self.df["song"] == song_name].index[0]
         sim_row = self.similarity[idx]
 
-        # ⚡ Fast top-k selection (avoids full sorting)
+        # Fast top-k selection this avoids full sorting
         top_indices = np.argpartition(sim_row, -top_k-1)[-top_k-1:]
         top_indices = top_indices[top_indices != idx]
         top_indices = top_indices[np.argsort(sim_row[top_indices])[::-1]]
@@ -85,11 +85,11 @@ if st.button("🚀 Show Recommendations"):
         st.pyplot(fig)
 
         # ----------------- CSV EXPORT -----------------
-        st.subheader("⬇️ Export Recommendations")
+        st.subheader("Export Recommendations :")
 
         csv = result_df.to_csv(index=False).encode("utf-8")
         st.download_button(
-            label="📥 Download Recommendations as CSV",
+            label="Download Recommendations as CSV",
             data=csv,
             file_name="music_recommendations.csv",
             mime="text/csv"
