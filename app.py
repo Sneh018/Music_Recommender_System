@@ -1,3 +1,11 @@
+import re
+
+def safe_text(text):
+    """
+    Remove characters that break Streamlit's frontend regex parser.
+    """
+    return re.sub(r'[$\\{}<>]', '', str(text))
+
 # app.py - Music Recommender System
 
 import streamlit as st
@@ -66,19 +74,24 @@ if st.button("🚀 Show Recommendations"):
         st.subheader("🎼 Recommended Songs")
 
         # ----------- TABLE DISPLAY -----------
-        st.dataframe(
-            result_df,
-            use_container_width=True
-        )
+        # Sanitize text for frontend safety
+        display_df = result_df.copy()
+        display_df["Song"] = display_df["Song"].apply(safe_text)
+        display_df["Artist"] = display_df["Artist"].apply(safe_text)
+
+        st.dataframe(display_df, use_container_width=True)
 
         # ----------------- VISUALIZATION -----------------
         st.subheader("📊 Similarity Score Visualization")
 
         fig, ax = plt.subplots()
+        safe_songs = result_df["Song"].apply(safe_text)
+
         ax.barh(
-            result_df["Song"][::-1],
+            safe_songs[::-1],
             result_df["Similarity Score"][::-1]
         )
+
         ax.set_xlabel("Cosine Similarity Score")
         ax.set_title("Top-K Similar Songs")
 
