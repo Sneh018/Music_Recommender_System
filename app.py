@@ -51,7 +51,7 @@ def load_recommender():
 recommender = load_recommender()
 
 # ----------------- UI -----------------
-st.title("🎵 Music Recommendation System (Full Dataset)")
+st.title("🎵 Music Recommendation System")
 st.caption("Content-Based Filtering using TF-IDF + Cosine Similarity")
 
 song_list = recommender.df["song"].dropna().unique()
