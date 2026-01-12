@@ -5,7 +5,6 @@ import pandas as pd
 import pickle
 import matplotlib.pyplot as plt
 import numpy as np
-import gzip
 
 # ----------------- PAGE CONFIG -----------------
 st.set_page_config(page_title="Music Recommender", layout="wide")
@@ -15,9 +14,7 @@ class MusicRecommender:
     def __init__(self):
         # ✅ Load FULL dataset (precomputed)
         self.df = pickle.load(open("df.pkl", "rb"))
-
-        with gzip.open("similarity.pkl.gz", "rb") as f:
-            self.similarity = pickle.load(f)
+        self.similarity = pickle.load(open("similarity.pkl", "rb"))
 
         # Optional safety reset index
         self.df = self.df.reset_index(drop=True)
